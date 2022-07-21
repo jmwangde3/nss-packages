@@ -20,7 +20,7 @@ index 2ca02bc..b461456 100644
 +++ b/ecm_interface.c
 @@ -334,7 +334,7 @@ static struct net_device *ecm_interface_dev_find_by_local_addr_ipv6(ip_addr_t ad
  	struct net_device *dev;
- 
+
  	ECM_IP_ADDR_TO_NIN6_ADDR(addr6, addr);
 -	dev = (struct net_device *)ipv6_dev_find(&init_net, &addr6, 1);
 +	dev = (struct net_device *)ecm_interface_ipv6_dev_find_and_hold(&init_net, &addr6, 1);
@@ -29,7 +29,7 @@ index 2ca02bc..b461456 100644
  #endif
 @@ -718,6 +718,34 @@ bool ecm_interface_mac_addr_get(ip_addr_t addr, uint8_t *mac_addr, bool *on_link
  EXPORT_SYMBOL(ecm_interface_mac_addr_get);
- 
+
  #ifdef ECM_IPV6_ENABLE
 +/* ecm_interface_ipv6_dev_find_and_hold()
 + *	Find (and hold) net device that has the given address.
@@ -79,7 +79,7 @@ index 0172e8d..4c17fee 100644
  bool ecm_interface_find_route_by_addr(ip_addr_t addr, struct ecm_interface_route *ecm_rt);
  void ecm_interface_route_release(struct ecm_interface_route *rt);
  #ifdef ECM_IPV6_ENABLE
-+struct net_device *ecm_interfcae_ipv6_dev_find_and_hold(struct net *net, struct in6_addr *addr, int strict);
++struct net_device *ecm_interface_ipv6_dev_find_and_hold(struct net *net, struct in6_addr *addr, int strict);
  struct neighbour *ecm_interface_ipv6_neigh_get(struct ecm_front_end_connection_instance *feci, ecm_db_obj_dir_t dir, ip_addr_t addr);
  void ecm_interface_send_neighbour_solicitation(struct net_device *dev, ip_addr_t addr);
  #endif
@@ -94,7 +94,7 @@ index e21ca24..6054685 100644
 +#ifdef ECM_IPV6_ENABLE
 +#include "ecm_front_end_ipv6.h"
 +#endif
- 
+
  /*
   * Sysctl table header
 @@ -315,7 +318,7 @@ bool ecm_front_end_gre_proto_is_accel_allowed(struct net_device *indev,
@@ -109,12 +109,11 @@ index e21ca24..6054685 100644
 @@ -325,7 +328,7 @@ bool ecm_front_end_gre_proto_is_accel_allowed(struct net_device *indev,
  			return false;
  		}
- 
+
 -		dev = ipv6_dev_find(&init_net, &(tuple->dst.u3.in6), 1);
 +		dev = ecm_interface_ipv6_dev_find_and_hold(&init_net, &(tuple->dst.u3.in6), 1);
  		if (dev) {
  			/*
  			 * Destination IP address is local
--- 
+--
 2.34.1
-
