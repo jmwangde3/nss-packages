@@ -5,9 +5,9 @@ PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_URL:=https://git.codelinaro.org/clo/qsdk/oss/lklm/qca-ssdk.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2022-04-07
-PKG_SOURCE_VERSION:=62955de3c838028d3f72313eef99c57fa4babb71
-PKG_MIRROR_HASH:=84c7de6d1ce82fb15acebea0e44158695a33ed6f18335da32ec9f248dcb4b285
+PKG_SOURCE_DATE:=2022-07-09
+PKG_SOURCE_VERSION:=775e4dc814580012e1019f53ff5cdb8968ed4ca8
+PKG_MIRROR_HASH:=2bc9ca2d5b5f9d8e47decf144e60fcfedb8cb835d91244c4ccbe5f3cb91dd84e
 
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
@@ -43,7 +43,7 @@ MAKE_FLAGS+= \
 	ARCH=$(LINUX_KARCH) \
 	TARGET_SUFFIX=$(CONFIG_TARGET_SUFFIX) \
 	GCC_VERSION=$(GCC_VERSION) \
-	EXTRA_CFLAGS=-fno-stack-protector -I$(STAGING_DIR)/usr/include \
+	EXTRA_CFLAGS='-Wno-error -fno-stack-protector -I$(STAGING_DIR)/usr/include' \
 	$(KERNEL_MAKE_FLAGS)
 
 ifneq (, $(findstring $(CONFIG_TARGET_BOARD), "ipq60xx" "ipq807x"))
