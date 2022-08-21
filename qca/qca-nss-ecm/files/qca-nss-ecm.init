@@ -18,7 +18,7 @@
 # openwrt build scripts automatically enable this package starting
 # at boot.
 
-START=99
+START=75
 
 get_front_end_mode() {
 	config_load "ecm"
@@ -93,7 +93,7 @@ unload_ecm() {
 }
 
 start() {
-	# If SFE CM is loaded, return.
+    # If SFE CM is loaded, return.
 	if [ -d /sys/module/shortcut_fe_cm ]; then
 		echo "shortcut_fe CM is loaded, unload it first"
 		echo "cmd: /etc/init.d/shortcut_fe stop"
